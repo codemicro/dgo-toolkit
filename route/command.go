@@ -1,4 +1,4 @@
-package command
+package route
 
 import "regexp"
 
@@ -8,7 +8,7 @@ type Command struct {
 	Help         string
 	CommandText  []string
 	Arguments    []Argument
-	Restrictions []Restriction
+	Restrictions []CommandRestriction
 	Run          MessageRunFunc
 
 	detectRegexp *regexp.Regexp
