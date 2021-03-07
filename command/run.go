@@ -69,6 +69,7 @@ func (b *Kit) OnMessageCreate(session *discordgo.Session, message *discordgo.Mes
 				for _, arg := range cmd.Arguments {
 
 					var val interface{}
+					var failMessage string
 
 					if len(trimmedContent) == 0 { // if there's nothing left to parse
 						if arg.Default != nil { // if there's a default available
@@ -78,23 +79,30 @@ func (b *Kit) OnMessageCreate(session *discordgo.Session, message *discordgo.Mes
 								b.handleError(err)
 								return
 							}
-
 							val = dv
+
+						} else {
+							failMessage = "argument missing"
 						}
+
 					} else { // otherwise parse from the available text
 						var err error
 						val, err = arg.Type.Parse(&trimmedContent)
 						if err != nil {
-							cont := fmt.Sprintf("❌ `%s`: %s", arg.Name, err.Error())
-
-							_, err = session.ChannelMessageSend(message.ChannelID, cont)
-							if err != nil {
-								b.handleError(err)
-							}
-
-							return
+							failMessage = err.Error()
 						}
 					}
+
+					if failMessage != "" {
+						cont := fmt.Sprintf("❌ `%s`: %s", arg.Name, failMessage)
+						_, err := session.ChannelMessageSend(message.ChannelID, cont)
+						if err != nil {
+							b.handleError(err)
+						}
+						return
+					}
+
+					fmt.Println(val)
 
 					argumentMap[arg.Name] = val
 
