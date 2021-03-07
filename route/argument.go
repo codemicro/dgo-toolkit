@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/bwmarrin/discordgo"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -48,11 +49,10 @@ func takeFirstPart(in string) (string, string) {
 	return xspl[0], v
 }
 
+// String will parse a single (quote enclosed) string
 var String = stringType{}
-
 type stringType struct{}
-
-func (s stringType) Parse(content *string) (interface{}, error) {
+func (_ stringType) Parse(content *string) (interface{}, error) {
 
 	a, b := takeFirstPart(*content)
 
@@ -65,6 +65,46 @@ func (s stringType) Parse(content *string) (interface{}, error) {
 	return a, nil
 
 }
-func (s stringType) Help(_ string) string {
+func (_ stringType) Help(_ string) string {
 	return "A string, for example `hello` or `\"hi there\"`"
 }
+
+// RemainingString will parse a the remained of the message as a string
+var RemainingString = remainingStringType{}
+type remainingStringType struct{}
+func (_ remainingStringType) Parse(content *string) (interface{}, error) {
+
+	if (*content)[0] == '"' || (*content)[0] == '\'' {
+		return parseQuote(content)
+	}
+
+	n := *content
+	*content = ""
+
+	return n, nil
+
+}
+func (_ remainingStringType) Help(_ string) string {
+	return String.Help("")
+}
+
+// RemainingString will parse a the remained of the message as a string
+var Integer = integerType{}
+type integerType struct{}
+func (_ integerType) Parse(content *string) (interface{}, error) {
+
+	a, b := takeFirstPart(*content)
+
+	xi, err := strconv.Atoi(a)
+	if err != nil {
+		return nil, err
+	}
+
+	*content = b
+	return xi, nil
+
+}
+func (_ integerType) Help(_ string) string {
+	return "A string, for example `123`"
+}
+
