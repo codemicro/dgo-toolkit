@@ -8,7 +8,7 @@ const (
 )
 
 type Reaction struct {
-	Name string
-	Run ReactionRunFunc
+	Name  string
+	Run   ReactionRunFunc
 	Event ReactionEvent
 }

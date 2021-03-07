@@ -10,15 +10,14 @@ import (
 
 // Kit is the core model for command parsing and routing
 type Kit struct {
-	Session *discordgo.Session
-	ErrorHandler func(error)
-	Prefixes []string
+	Session         *discordgo.Session
+	ErrorHandler    func(error)
+	Prefixes        []string
 	IsCaseSensitive bool
-	DebugMode bool
+	DebugMode       bool
 
-	commandSet []*Command
+	commandSet  []*Command
 	reactionSet []*Reaction
-
 }
 
 // HandleError is the internal function used to handle an error that accounts for *kit.ErrorHandler being nil
@@ -63,7 +62,7 @@ func (b *Kit) CreateHandlers() {
 	if b.commandSet != nil && len(b.commandSet) > 0 {
 		b.Session.AddHandler(b.onMessageCreate)
 	}
-	if b.reactionSet != nil&& len(b.reactionSet) > 0 {
+	if b.reactionSet != nil && len(b.reactionSet) > 0 {
 		b.Session.AddHandler(b.onReactionAdd)
 		b.Session.AddHandler(b.onReactionRemove)
 	}

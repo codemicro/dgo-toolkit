@@ -9,8 +9,8 @@ import (
 
 // Argument is used for parsing arguments in commands.
 type Argument struct {
-	Name string
-	Type ArgumentType
+	Name    string
+	Type    ArgumentType
 	Default func(session *discordgo.Session, message *discordgo.MessageCreate) (interface{}, error)
 }
 
@@ -36,6 +36,7 @@ func parseQuote(content *string) (interface{}, error) {
 }
 
 var spaceSplitRegex = regexp.MustCompile(` +`)
+
 // takeFirstPart will return the first section of a string when split by spaces. For example "hello  world hi" will
 // return ("hello", "world hi")
 func takeFirstPart(in string) (string, string) {
@@ -49,7 +50,8 @@ func takeFirstPart(in string) (string, string) {
 
 var String = stringType{}
 
-type stringType struct {}
+type stringType struct{}
+
 func (s stringType) Parse(content *string) (interface{}, error) {
 
 	a, b := takeFirstPart(*content)
