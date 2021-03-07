@@ -28,7 +28,7 @@ func parseQuote(content *string) (interface{}, error) {
 	// TODO: quote escaping
 	end := strings.Index((*content)[1:], string((*content)[0]))
 	if end == -1 {
-		return nil, errors.New("no closing quotation mark found")
+		return nil, errors.New("got an opening quotation mark but no closing quotation mark")
 	}
 	n := (*content)[1 : end+1]
 	*content = (*content)[end+1:]
