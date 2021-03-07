@@ -16,7 +16,7 @@ type MessageContext struct {
 
 // OnMessageCreate is a callback function to be used with a DiscordGo session that iterates through all registered
 // commands and runs the first one that it finds that matches
-func (b *Box) OnMessageCreate(session *discordgo.Session, message *discordgo.MessageCreate) {
+func (b *Kit) OnMessageCreate(session *discordgo.Session, message *discordgo.MessageCreate) {
 
 	// check if the message has a given prefix
 	var trimmedContent string

@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// Box is the core model for command parsing and routing
-type Box struct {
+// Kit is the core model for command parsing and routing
+type Kit struct {
 	Session *discordgo.Session
 	ErrorHandler func(error)
 	Prefixes []string
@@ -19,8 +19,8 @@ type Box struct {
 
 }
 
-// AddCommand adds commands to the command set for this instance of Box
-func (b *Box) AddCommand(commands ...*Command) {
+// AddCommand adds commands to the command set for this instance of Kit
+func (b *Kit) AddCommand(commands ...*Command) {
 
 	for _, c := range commands {
 		var rx []string
@@ -40,8 +40,8 @@ func (b *Box) AddCommand(commands ...*Command) {
 
 }
 
-// caseCompare compares two strings either with or without case sensitivity depending on the value set in the parent Box
-func (b *Box) caseCompare(x, y string) bool {
+// caseCompare compares two strings either with or without case sensitivity depending on the value set in the parent Kit
+func (b *Kit) caseCompare(x, y string) bool {
 	if b.IsCaseSensitive {
 		return x == y
 	}
@@ -49,12 +49,12 @@ func (b *Box) caseCompare(x, y string) bool {
 }
 
 // hasPrefix is an implementation of strings.HasPrefix that uses caseCompare
-func (b *Box) hasPrefix(s, prefix string) bool {
+func (b *Kit) hasPrefix(s, prefix string) bool {
 	return len(s) >= len(prefix) && b.caseCompare(s[0:len(prefix)], prefix)
 }
 
 // trimPrefix is an implementation of strings.TrimPrefix that uses caseCompare
-func (b *Box) trimPrefix(s, prefix string) string {
+func (b *Kit) trimPrefix(s, prefix string) string {
 	if b.hasPrefix(s, prefix) {
 		return s[len(prefix):]
 	}
