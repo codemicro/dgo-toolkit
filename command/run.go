@@ -7,11 +7,17 @@ import (
 )
 
 type MessageRunFunc func(ctx *MessageContext) error
+type ReactionRunFunc func(ctx *ReactionContext) error
 
 type MessageContext struct {
 	Session   *discordgo.Session
 	Message   *discordgo.MessageCreate
 	Arguments map[string]interface{}
+}
+
+type ReactionContext struct {
+	Session  *discordgo.Session
+	Reaction *discordgo.MessageReaction
 }
 
 // onMessageCreate is a callback function to be used with a DiscordGo session that iterates through all registered
@@ -120,6 +126,50 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 			return // no more commands
 
+		}
+	}
+
+}
+
+func (b *Kit) onReactionAdd(session *discordgo.Session, reaction *discordgo.MessageReactionAdd) {
+
+	mCtx := ReactionContext{
+		Session:  session,
+		Reaction: reaction.MessageReaction,
+	}
+
+	for _, r := range b.reactionSet {
+
+		if r.Event != ReactionAdd {
+			continue
+		}
+
+		ctx := mCtx
+		err := r.Run(&ctx)
+		if err != nil {
+			b.handleError(err, r.Name)
+		}
+	}
+
+}
+
+func (b *Kit) onReactionRemove(session *discordgo.Session, reaction *discordgo.MessageReactionRemove) {
+
+	mCtx := ReactionContext{
+		Session:  session,
+		Reaction: reaction.MessageReaction,
+	}
+
+	for _, r := range b.reactionSet {
+
+		if r.Event != ReactionRemove {
+			continue
+		}
+
+		ctx := mCtx
+		err := r.Run(&ctx)
+		if err != nil {
+			b.handleError(err, r.Name)
 		}
 	}
 

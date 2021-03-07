@@ -54,11 +54,19 @@ func (b *Kit) AddCommand(commands ...*Command) {
 
 }
 
+// AddReaction adds a reaction create handler to the reaction set for this instance of Kit
+func (b *Kit) AddReaction(reactions ...*Reaction) {
+	b.reactionSet = append(b.reactionSet, reactions...)
+}
+
 func (b *Kit) CreateHandlers() {
 	if b.commandSet != nil && len(b.commandSet) > 0 {
 		b.Session.AddHandler(b.onMessageCreate)
 	}
-	// TODO: on reaction add/remove
+	if b.reactionSet != nil&& len(b.reactionSet) > 0 {
+		b.Session.AddHandler(b.onReactionAdd)
+		b.Session.AddHandler(b.onReactionRemove)
+	}
 }
 
 // caseCompare compares two strings either with or without case sensitivity depending on the value set in the parent Kit
