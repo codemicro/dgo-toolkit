@@ -22,9 +22,12 @@ type Kit struct {
 }
 
 // HandleError is the internal function used to handle an error that accounts for *kit.ErrorHandler being nil
-func (b *Kit) handleError(e error) {
+func (b *Kit) handleError(e error, i ...string) {
+	if len(i) >= 1 {
+		e = fmt.Errorf("%s - %s", strings.Join(i, " "), e.Error())
+	}
 	if b.ErrorHandler == nil {
-		_, _ = fmt.Fprintf(os.Stderr, e.Error())
+		_, _ = fmt.Fprintf(os.Stderr, "ERROR: %s\n", e.Error())
 	} else {
 		b.ErrorHandler(e)
 	}

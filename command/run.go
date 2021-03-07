@@ -115,7 +115,7 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 			err := cmd.Run(ctx)
 			if err != nil {
-				b.handleError(err)
+				b.handleError(err, cmd.Name)
 			}
 
 			return // no more commands
