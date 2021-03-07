@@ -51,6 +51,13 @@ func (b *Kit) AddCommand(commands ...*Command) {
 
 }
 
+func (b *Kit) CreateHandlers() {
+	if b.commandSet != nil && len(b.commandSet) > 0 {
+		b.Session.AddHandler(b.onMessageCreate)
+	}
+	// TODO: on reaction add/remove
+}
+
 // caseCompare compares two strings either with or without case sensitivity depending on the value set in the parent Kit
 func (b *Kit) caseCompare(x, y string) bool {
 	if b.IsCaseSensitive {
