@@ -1,7 +1,9 @@
 package command
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -17,6 +19,15 @@ type Kit struct {
 	commandSet []*Command
 	reactionSet []*Reaction
 
+}
+
+// HandleError is the internal function used to handle an error that accounts for *kit.ErrorHandler being nil
+func (b *Kit) handleError(e error) {
+	if b.ErrorHandler == nil {
+		_, _ = fmt.Fprintf(os.Stderr, e.Error())
+	} else {
+		b.ErrorHandler(e)
+	}
 }
 
 // AddCommand adds commands to the command set for this instance of Kit

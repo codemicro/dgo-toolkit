@@ -42,7 +42,7 @@ func (b *Kit) OnMessageCreate(session *discordgo.Session, message *discordgo.Mes
 				for _, rf := range cmd.Restrictions {
 					rfOk, err := rf(session, message)
 					if err != nil {
-						b.ErrorHandler(err)
+						b.handleError(err)
 						return // TODO: could something else be done here?
 					}
 					ok = ok && (rfOk || b.DebugMode) // use debug mode to ignore restrictions
@@ -52,7 +52,7 @@ func (b *Kit) OnMessageCreate(session *discordgo.Session, message *discordgo.Mes
 			if !ok { // if the restrictions have not been met
 				err := session.MessageReactionAdd(message.ChannelID, message.ID, "⚠")
 				if err != nil {
-					b.ErrorHandler(err)
+					b.handleError(err)
 				}
 				break
 			}
@@ -75,7 +75,7 @@ func (b *Kit) OnMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 							dv, err := arg.Default(session, message)
 							if err != nil {
-								b.ErrorHandler(err)
+								b.handleError(err)
 								return
 							}
 
@@ -89,7 +89,7 @@ func (b *Kit) OnMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 							_, err = session.ChannelMessageSend(message.ChannelID, cont)
 							if err != nil {
-								b.ErrorHandler(err)
+								b.handleError(err)
 							}
 
 							return
@@ -109,7 +109,7 @@ func (b *Kit) OnMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 			err := cmd.Run(ctx)
 			if err != nil {
-				b.ErrorHandler(err)
+				b.handleError(err)
 			}
 
 			return // no more commands
