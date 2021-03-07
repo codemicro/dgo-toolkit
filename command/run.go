@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-type RunFunc func(ctx *MessageContext) error
+type MessageRunFunc func(ctx *MessageContext) error
 
 type MessageContext struct {
 	Session   *discordgo.Session

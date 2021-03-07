@@ -9,7 +9,7 @@ type Command struct {
 	CommandText []string
 	Arguments []Argument
 	Restrictions []Restriction
-	Run RunFunc
+	Run          MessageRunFunc
 
 	detectRegexp *regexp.Regexp
 }
