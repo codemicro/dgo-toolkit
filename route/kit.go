@@ -15,6 +15,7 @@ type Kit struct {
 	Prefixes        []string
 	IsCaseSensitive bool
 	DebugMode       bool
+	AllowBots       bool
 
 	commandSet  []*Command
 	reactionSet []*Reaction

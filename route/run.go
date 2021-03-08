@@ -26,6 +26,20 @@ type ReactionContext struct {
 // commands and runs the first one that it finds that matches
 func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.MessageCreate) {
 
+	// ignore self
+	if usr, err := session.User("@me"); err != nil {
+		b.ErrorHandler(err)
+		return
+	} else if usr.ID == message.Author.ID {
+		return
+	}
+
+	if !b.AllowBots {
+		if message.Author.Bot {
+			return
+		}
+	}
+
 	// check if the message has a given prefix
 	var trimmedContent string
 	for _, prefix := range b.Prefixes {
@@ -136,6 +150,14 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 func (b *Kit) onReactionAdd(session *discordgo.Session, reaction *discordgo.MessageReactionAdd) {
 
+	// ignore self
+	if usr, err := session.User("@me"); err != nil {
+		b.ErrorHandler(err)
+		return
+	} else if usr.ID == reaction.UserID {
+		return
+	}
+
 	mCtx := ReactionContext{
 		Session:  session,
 		Reaction: reaction.MessageReaction,
@@ -158,6 +180,14 @@ func (b *Kit) onReactionAdd(session *discordgo.Session, reaction *discordgo.Mess
 }
 
 func (b *Kit) onReactionRemove(session *discordgo.Session, reaction *discordgo.MessageReactionRemove) {
+
+	// ignore self
+	if usr, err := session.User("@me"); err != nil {
+		b.ErrorHandler(err)
+		return
+	} else if usr.ID == reaction.UserID {
+		return
+	}
 
 	mCtx := ReactionContext{
 		Session:  session,
