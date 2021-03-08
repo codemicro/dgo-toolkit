@@ -113,3 +113,27 @@ func (integerType) Parse(content *string) (interface{}, error) {
 }
 func (integerType) Name() string         { return "integer" }
 func (integerType) Help(_ string) string { return "A integer, for example `123`" }
+
+// URL will parse a single URL
+var URL = urlType{}
+var urlRegex = regexp.MustCompile(`^((http[s]?|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)?(.*)?(#[\w\-]+)?$`)
+type urlType struct{}
+
+func (urlType) Parse(content *string) (interface{}, error) {
+
+	a, b := takeFirstPart(*content)
+
+	if !strings.HasSuffix(a, "/") {
+		a += "/" // the regex only matches URLs with a trailing /
+	}
+
+	if urlRegex.MatchString(a) {
+		*content = b
+		return a, nil
+	}
+	return nil, errors.New("invalid URL")
+
+}
+func (urlType) Name() string         { return "url" }
+func (urlType) Help(_ string) string { return "A URL, for example `https://www.example.com`" }
+
