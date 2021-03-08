@@ -16,6 +16,12 @@ type MessageContext struct {
 	kit       *Kit
 }
 
+func (m *MessageContext) DefaultAllowedMentions() *discordgo.MessageAllowedMentions {
+	// This copy is intentional
+	n := m.kit.DefaultAllowedMentions
+	return &n
+}
+
 type ReactionContext struct {
 	Session  *discordgo.Session
 	Reaction *discordgo.MessageReaction

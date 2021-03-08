@@ -10,12 +10,13 @@ import (
 
 // Kit is the core model for command parsing and routing
 type Kit struct {
-	Session         *discordgo.Session
-	ErrorHandler    func(error)
-	Prefixes        []string
-	IsCaseSensitive bool
-	DebugMode       bool
-	AllowBots       bool
+	Session                *discordgo.Session
+	ErrorHandler           func(error)
+	Prefixes               []string
+	IsCaseSensitive        bool
+	DebugMode              bool
+	AllowBots              bool
+	DefaultAllowedMentions discordgo.MessageAllowedMentions
 
 	commandSet  []*Command
 	reactionSet []*Reaction
