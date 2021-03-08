@@ -8,7 +8,7 @@
 
 ----
 
-`toolkit` is a collection of modules to ease the process of creating a Discord bot using Golang and the DiscordGo package. It provides command parsing and routing capabilities, reaction handler groups and other conveniences.
+`toolkit` is a collection of modules to ease the process of creating a Discord bot using Golang and the [DiscordGo](https://github.com/bwmarrin/discordgo) package. It provides command parsing and routing capabilities, reaction handler groups and other conveniences.
 
 ## Example (routing)
 
@@ -55,8 +55,13 @@ kit.CreateHandlers()
 _ = session.Open()
 ```
 
+## Aims
+* Simple, easy to use
+* No dependencies except DiscordGo
+
 ## TODO
 
 * Confirmation popups
 * Pagination helper
 * Middleware interface
+* Unified response type that can be returned from a function (or maybe is included as a pointer in Ctx?)
