@@ -18,6 +18,7 @@ type MessageContext struct {
 type ReactionContext struct {
 	Session  *discordgo.Session
 	Reaction *discordgo.MessageReaction
+	Event    ReactionEvent
 }
 
 // onMessageCreate is a callback function to be used with a DiscordGo session that iterates through all registered
@@ -136,6 +137,7 @@ func (b *Kit) onReactionAdd(session *discordgo.Session, reaction *discordgo.Mess
 	mCtx := ReactionContext{
 		Session:  session,
 		Reaction: reaction.MessageReaction,
+		Event:    ReactionAdd,
 	}
 
 	for _, r := range b.reactionSet {
@@ -158,6 +160,7 @@ func (b *Kit) onReactionRemove(session *discordgo.Session, reaction *discordgo.M
 	mCtx := ReactionContext{
 		Session:  session,
 		Reaction: reaction.MessageReaction,
+		Event:    ReactionRemove,
 	}
 
 	for _, r := range b.reactionSet {
