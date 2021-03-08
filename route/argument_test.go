@@ -113,4 +113,3 @@ func Test_integerType_Parse(t *testing.T) {
 		})
 	}
 }
-

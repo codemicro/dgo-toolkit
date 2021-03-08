@@ -51,7 +51,9 @@ func takeFirstPart(in string) (string, string) {
 
 // String will parse a single (quote enclosed) string
 var String = stringType{}
+
 type stringType struct{}
+
 func (_ stringType) Parse(content *string) (interface{}, error) {
 
 	a, b := takeFirstPart(*content)
@@ -71,7 +73,9 @@ func (_ stringType) Help(_ string) string {
 
 // RemainingString will parse a the remainder of the message as a string
 var RemainingString = remainingStringType{}
+
 type remainingStringType struct{}
+
 func (_ remainingStringType) Parse(content *string) (interface{}, error) {
 
 	if (*content)[0] == '"' || (*content)[0] == '\'' {
@@ -90,7 +94,9 @@ func (_ remainingStringType) Help(_ string) string {
 
 // Integer will parse a single integer
 var Integer = integerType{}
+
 type integerType struct{}
+
 func (_ integerType) Parse(content *string) (interface{}, error) {
 
 	a, b := takeFirstPart(*content)
@@ -107,4 +113,3 @@ func (_ integerType) Parse(content *string) (interface{}, error) {
 func (_ integerType) Help(_ string) string {
 	return "A string, for example `123`"
 }
-
