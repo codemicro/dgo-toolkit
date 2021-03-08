@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-// Argument is used for parsing arguments in commands.
+// Argument represents an argument in a command
 type Argument struct {
 	Name    string
 	Type    ArgumentType
@@ -69,7 +69,7 @@ func (_ stringType) Help(_ string) string {
 	return "A string, for example `hello` or `\"hi there\"`"
 }
 
-// RemainingString will parse a the remained of the message as a string
+// RemainingString will parse a the remainder of the message as a string
 var RemainingString = remainingStringType{}
 type remainingStringType struct{}
 func (_ remainingStringType) Parse(content *string) (interface{}, error) {
@@ -88,7 +88,7 @@ func (_ remainingStringType) Help(_ string) string {
 	return String.Help("")
 }
 
-// RemainingString will parse a the remained of the message as a string
+// Integer will parse a single integer
 var Integer = integerType{}
 type integerType struct{}
 func (_ integerType) Parse(content *string) (interface{}, error) {

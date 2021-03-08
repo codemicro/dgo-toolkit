@@ -2,7 +2,7 @@ package route
 
 import "regexp"
 
-// Command represents a command that can be run by a user
+// Command represents a command
 type Command struct {
 	Name         string
 	Help         string

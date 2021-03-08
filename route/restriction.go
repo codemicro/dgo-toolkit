@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-// CommandRestriction is a function that returns true if a command can be run based on the current state (eg. user,
-// roles, channel, etc)
+// CommandRestriction is a function that returns true if a command can be run based on the current state (eg. details
+// about the user, roles, channel, etc)
 type CommandRestriction func(session *discordgo.Session, message *discordgo.MessageCreate) (bool, error)
 
 func isStringInSlice(needle string, haystack []string) (found bool) {
