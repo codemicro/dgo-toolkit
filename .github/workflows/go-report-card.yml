@@ -1,0 +1,17 @@
+name: Update Go report card
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+
+jobs:
+
+  report:
+    name: Send POST request
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Go report card
+      uses: creekorful/goreportcard-action@v1.0
