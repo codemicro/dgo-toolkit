@@ -25,6 +25,10 @@ func (b *Kit) GetCommandInfo() []*CommandInfo {
 	var n []*CommandInfo
 	for _, cmd := range b.commandSet {
 
+		if cmd.Invisible {
+			continue
+		}
+
 		var args []*ArgumentInfo
 		for _, ag := range cmd.Arguments {
 			args = append(args, &ArgumentInfo{

@@ -10,6 +10,7 @@ type Command struct {
 	Arguments    []Argument
 	Restrictions []CommandRestriction
 	Run          MessageRunFunc
+	Invisible    bool // prevent command from being shown in *kit.GetCommandInfo
 
 	detectRegexp *regexp.Regexp
 }
