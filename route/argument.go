@@ -54,7 +54,7 @@ var String = stringType{}
 
 type stringType struct{}
 
-func (_ stringType) Parse(content *string) (interface{}, error) {
+func (stringType) Parse(content *string) (interface{}, error) {
 
 	a, b := takeFirstPart(*content)
 
@@ -67,7 +67,7 @@ func (_ stringType) Parse(content *string) (interface{}, error) {
 	return a, nil
 
 }
-func (_ stringType) Help(_ string) string {
+func (stringType) Help(_ string) string {
 	return "A string, for example `hello` or `\"hi there\"`"
 }
 
@@ -76,7 +76,7 @@ var RemainingString = remainingStringType{}
 
 type remainingStringType struct{}
 
-func (_ remainingStringType) Parse(content *string) (interface{}, error) {
+func (remainingStringType) Parse(content *string) (interface{}, error) {
 
 	if (*content)[0] == '"' || (*content)[0] == '\'' {
 		return parseQuote(content)
@@ -88,7 +88,7 @@ func (_ remainingStringType) Parse(content *string) (interface{}, error) {
 	return n, nil
 
 }
-func (_ remainingStringType) Help(_ string) string {
+func (remainingStringType) Help(_ string) string {
 	return String.Help("")
 }
 
@@ -97,7 +97,7 @@ var Integer = integerType{}
 
 type integerType struct{}
 
-func (_ integerType) Parse(content *string) (interface{}, error) {
+func (integerType) Parse(content *string) (interface{}, error) {
 
 	a, b := takeFirstPart(*content)
 
@@ -110,6 +110,6 @@ func (_ integerType) Parse(content *string) (interface{}, error) {
 	return xi, nil
 
 }
-func (_ integerType) Help(_ string) string {
+func (integerType) Help(_ string) string {
 	return "A string, for example `123`"
 }
