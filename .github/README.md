@@ -60,4 +60,3 @@ _ = session.Open()
 * Confirmation popups
 * Pagination helper
 * Middleware interface
-* Help text generation

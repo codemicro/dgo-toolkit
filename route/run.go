@@ -13,6 +13,7 @@ type MessageContext struct {
 	Session   *discordgo.Session
 	Message   *discordgo.MessageCreate
 	Arguments map[string]interface{}
+	kit       *Kit
 }
 
 type ReactionContext struct {
@@ -118,6 +119,7 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 				Session:   session,
 				Message:   message,
 				Arguments: argumentMap,
+				kit:       b,
 			}
 
 			err := cmd.Run(ctx)
