@@ -18,8 +18,6 @@ type ArgumentInfo struct {
 	HasDefault bool
 }
 
-
-
 // GetCommandInfo returns information about all commands in the kit (intended for use in help commands)
 func (b *Kit) GetCommandInfo() []*CommandInfo {
 	var n []*CommandInfo

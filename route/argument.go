@@ -70,7 +70,7 @@ func (stringType) Parse(content *string) (interface{}, error) {
 
 }
 
-func (stringType) Name() string { return "string" }
+func (stringType) Name() string         { return "string" }
 func (stringType) Help(_ string) string { return "A string, for example `hello` or `\"hi there\"`" }
 
 // RemainingString will parse a the remainder of the message as a string
@@ -90,7 +90,7 @@ func (remainingStringType) Parse(content *string) (interface{}, error) {
 	return n, nil
 
 }
-func (remainingStringType) Name() string { return "string" }
+func (remainingStringType) Name() string         { return "string" }
 func (remainingStringType) Help(n string) string { return String.Help(n) }
 
 // Integer will parse a single integer
@@ -111,5 +111,5 @@ func (integerType) Parse(content *string) (interface{}, error) {
 	return xi, nil
 
 }
-func (integerType) Name() string { return "integer" }
+func (integerType) Name() string         { return "integer" }
 func (integerType) Help(_ string) string { return "A integer, for example `123`" }
