@@ -9,19 +9,6 @@ import (
 type MessageRunFunc func(ctx *MessageContext) error
 type ReactionRunFunc func(ctx *ReactionContext) error
 
-type MessageContext struct {
-	Session   *discordgo.Session
-	Message   *discordgo.MessageCreate
-	Arguments map[string]interface{}
-	kit       *Kit
-}
-
-func (m *MessageContext) DefaultAllowedMentions() *discordgo.MessageAllowedMentions {
-	// This copy is intentional
-	n := m.kit.DefaultAllowedMentions
-	return &n
-}
-
 type ReactionContext struct {
 	Session  *discordgo.Session
 	Reaction *discordgo.MessageReaction
