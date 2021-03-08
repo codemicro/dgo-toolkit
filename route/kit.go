@@ -20,6 +20,11 @@ type Kit struct {
 	reactionSet []*Reaction
 }
 
+// NewKit creates a new Kit instance
+func NewKit(session *discordgo.Session, prefixes []string) *Kit {
+	return &Kit{Session: session, Prefixes: prefixes}
+}
+
 // HandleError is the internal function used to handle an error that accounts for *kit.ErrorHandler being nil
 func (b *Kit) handleError(e error, i ...string) {
 	if len(i) >= 1 {
