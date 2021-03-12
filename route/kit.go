@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 // Kit is the core model for command parsing and routing
@@ -20,11 +21,13 @@ type Kit struct {
 
 	commandSet  []*Command
 	reactionSet []*Reaction
+	tempReactionSet map[int]*Reaction
+	tempReactionsMux *sync.RWMutex
 }
 
 // NewKit creates a new Kit instance
 func NewKit(session *discordgo.Session, prefixes []string) *Kit {
-	return &Kit{Session: session, Prefixes: prefixes}
+	return &Kit{Session: session, Prefixes: prefixes, tempReactionSet: make(map[int]*Reaction), tempReactionsMux: new(sync.RWMutex)}
 }
 
 // HandleError is the internal function used to handle an error that accounts for *kit.ErrorHandler being nil
@@ -63,6 +66,23 @@ func (b *Kit) AddCommand(commands ...*Command) {
 // AddReaction adds a reaction create handler to the reaction set for this instance of Kit
 func (b *Kit) AddReaction(reactions ...*Reaction) {
 	b.reactionSet = append(b.reactionSet, reactions...)
+}
+
+// AddTemporaryReaction creates registers a temporary reaction handler and returns the created handler's ID.
+func (b *Kit) AddTemporaryReaction(reaction *Reaction) int {
+	b.tempReactionsMux.Lock()
+	n := len(b.tempReactionSet)
+	b.tempReactionSet[n] = reaction
+	b.tempReactionsMux.Unlock()
+	return n
+}
+
+// RemoveTemporaryReaction removes a temporary reaction handler based on the provided ID. If the ID does not exist,
+// RemoveTemporaryReaction is a no-op.
+func (b *Kit) RemoveTemporaryReaction(id int) {
+	b.tempReactionsMux.Lock()
+	delete(b.tempReactionSet, id)
+	b.tempReactionsMux.Unlock()
 }
 
 func (b *Kit) CreateHandlers() {

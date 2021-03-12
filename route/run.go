@@ -9,8 +9,14 @@ import (
 type MessageRunFunc func(ctx *MessageContext) error
 type ReactionRunFunc func(ctx *ReactionContext) error
 
+type MessageContext struct {
+	*CommonContext
+	Message   *discordgo.MessageCreate
+	Arguments map[string]interface{}
+}
+
 type ReactionContext struct {
-	Session  *discordgo.Session
+	*CommonContext
 	Reaction *discordgo.MessageReaction
 	Event    ReactionEvent
 }
@@ -123,10 +129,12 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 			}
 
 			ctx := &MessageContext{
-				Session:   session,
+				CommonContext: &CommonContext{
+					Session: session,
+					kit:     b,
+				},
 				Message:   message,
 				Arguments: argumentMap,
-				kit:       b,
 			}
 
 			err := cmd.Run(ctx)
@@ -152,15 +160,18 @@ func (b *Kit) onReactionAdd(session *discordgo.Session, reaction *discordgo.Mess
 	}
 
 	mCtx := ReactionContext{
-		Session:  session,
+		CommonContext: &CommonContext{
+			Session: session,
+			kit:     b,
+		},
 		Reaction: reaction.MessageReaction,
 		Event:    ReactionAdd,
 	}
 
-	for _, r := range b.reactionSet {
+	f := func(r *Reaction) {
 
 		if r.Event != ReactionAdd {
-			continue
+			return
 		}
 
 		ctx := mCtx
@@ -169,6 +180,16 @@ func (b *Kit) onReactionAdd(session *discordgo.Session, reaction *discordgo.Mess
 			b.handleError(err, r.Name)
 		}
 	}
+
+	for _, r := range b.reactionSet {
+		f(r)
+	}
+
+	b.tempReactionsMux.RLock()
+	for _, r := range b.tempReactionSet {
+		f(r)
+	}
+	b.tempReactionsMux.RUnlock()
 
 }
 
@@ -183,15 +204,17 @@ func (b *Kit) onReactionRemove(session *discordgo.Session, reaction *discordgo.M
 	}
 
 	mCtx := ReactionContext{
-		Session:  session,
+		CommonContext: &CommonContext{
+			Session: session,
+			kit:     b,
+		},
 		Reaction: reaction.MessageReaction,
 		Event:    ReactionRemove,
 	}
 
-	for _, r := range b.reactionSet {
-
+	f := func(r *Reaction) {
 		if r.Event != ReactionRemove {
-			continue
+			return
 		}
 
 		ctx := mCtx
@@ -200,5 +223,15 @@ func (b *Kit) onReactionRemove(session *discordgo.Session, reaction *discordgo.M
 			b.handleError(err, r.Name)
 		}
 	}
+
+	for _, r := range b.reactionSet {
+		f(r)
+	}
+
+	b.tempReactionsMux.RLock()
+	for _, r := range b.tempReactionSet {
+		f(r)
+	}
+	b.tempReactionsMux.RUnlock()
 
 }
