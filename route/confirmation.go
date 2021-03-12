@@ -8,7 +8,8 @@ const acceptReaction = "✅"
 const rejectReaction = "❌"
 
 // NewConfirmation will create a new confirmation embed in the channel with the ID channelId. If userID is specified,
-// reactions by users other than the user with that ID are ignored - else, all reactions are accepted.
+// reactions by users other than the user with that ID are ignored - else, all reactions are accepted. acceptFunc and
+// rejectFunc can also be nil.
 func (b *Kit) NewConfirmation(channelId string, userId string, embed *discordgo.MessageEmbed, acceptFunc ReactionRunFunc, rejectFunc ReactionRunFunc) error {
 
 	msg, err := b.Session.ChannelMessageSendEmbed(channelId, embed)
@@ -29,9 +30,13 @@ func (b *Kit) NewConfirmation(channelId string, userId string, embed *discordgo.
 				var err error
 
 				if ctx.Reaction.Emoji.Name == acceptReaction {
-					err = acceptFunc(ctx)
+					if acceptFunc != nil {
+						err = acceptFunc(ctx)
+					}
 				} else if ctx.Reaction.Emoji.Name == rejectReaction {
-					err = rejectFunc(ctx)
+					if rejectFunc != nil {
+						err = rejectFunc(ctx)
+					}
 				} else {
 					return nil
 				}
