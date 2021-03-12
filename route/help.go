@@ -50,5 +50,5 @@ func (b *Kit) GetCommandInfo() []*CommandInfo {
 
 // GetCommandInfo returns information about all commands in the kit (intended for use in help commands)
 func (m *MessageContext) GetCommandInfo() []*CommandInfo {
-	return m.kit.GetCommandInfo()
+	return m.Kit.GetCommandInfo()
 }

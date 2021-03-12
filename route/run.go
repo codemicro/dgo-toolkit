@@ -131,7 +131,7 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 			ctx := &MessageContext{
 				CommonContext: &CommonContext{
 					Session: session,
-					kit:     b,
+					Kit:     b,
 				},
 				Message:   message,
 				Arguments: argumentMap,
@@ -162,7 +162,7 @@ func (b *Kit) onReactionAdd(session *discordgo.Session, reaction *discordgo.Mess
 	mCtx := ReactionContext{
 		CommonContext: &CommonContext{
 			Session: session,
-			kit:     b,
+			Kit:     b,
 		},
 		Reaction: reaction.MessageReaction,
 		Event:    ReactionAdd,
@@ -206,7 +206,7 @@ func (b *Kit) onReactionRemove(session *discordgo.Session, reaction *discordgo.M
 	mCtx := ReactionContext{
 		CommonContext: &CommonContext{
 			Session: session,
-			kit:     b,
+			Kit:     b,
 		},
 		Reaction: reaction.MessageReaction,
 		Event:    ReactionRemove,
