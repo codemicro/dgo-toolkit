@@ -40,8 +40,9 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 	}
 
 	if !b.AllowDirectMessages {
-		ch, _ := session.Channel(message.ChannelID)
-		if ch.Type == discordgo.ChannelTypeDM {
+		// no guild ID means this isn't a guild, therefore it's some kind of DM
+		// discord please never add a third channel type
+		if message.GuildID == "" {
 			return
 		}
 	}
