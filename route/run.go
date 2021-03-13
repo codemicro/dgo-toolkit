@@ -39,6 +39,13 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 		}
 	}
 
+	if !b.AllowDirectMessages {
+		ch, _ := session.Channel(message.ChannelID)
+		if ch.Type == discordgo.ChannelTypeDM {
+			return
+		}
+	}
+
 	// check if the message has a given prefix
 	var trimmedContent string
 	for _, prefix := range b.Prefixes {

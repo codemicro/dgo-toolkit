@@ -18,6 +18,7 @@ type Kit struct {
 	DebugMode              bool
 	AllowBots              bool
 	DefaultAllowedMentions discordgo.MessageAllowedMentions
+	AllowDirectMessages    bool
 
 	commandSet  []*Command
 	reactionSet []*Reaction
