@@ -206,5 +206,5 @@ func (durationType) Parse(content *string) (interface{}, error) {
 }
 func (durationType) Name() string { return "duration" }
 func (durationType) Help(_ string) string {
-	return "A duration, for example `7d1h2m3s`. Valid time units are \"s\", \"m\", \"h\" and \"d\"."
+	return "A duration, for example `7d1h2m3s`. Valid time units are `s`, `m`, `h` and `d`."
 }
