@@ -168,26 +168,31 @@ func (durationType) Parse(content *string) (interface{}, error) {
 			currentDigitBuffer += string(char)
 		} else {
 
-			numI, err := strconv.Atoi(currentDigitBuffer)
+
+
+			var mod time.Duration
+
+			switch char {
+			case 'd':
+				mod = time.Hour * 24
+			case 'h':
+				mod = time.Hour
+			case 'm':
+				mod = time.Minute
+			case 's':
+				mod = time.Second
+			default:
+				return 0, fmt.Errorf("ParseDuration: unknown unit suffix \"%s\"", string(char))
+			}
+
+			num, err := strconv.Atoi(currentDigitBuffer)
 			currentDigitBuffer = ""
 			if err != nil {
 				return 0, err
 			}
 
-			num := time.Duration(numI)
+			dur += time.Duration(num) * mod
 
-			switch char {
-			case 'd':
-				dur += num * time.Hour * 24
-			case 'h':
-				dur += num * time.Hour
-			case 'm':
-				dur += num * time.Minute
-			case 's':
-				dur += num * time.Second
-			default:
-				return 0, fmt.Errorf("ParseDuration: unknown unit suffix \"%s\"", string(char))
-			}
 		}
 	}
 
