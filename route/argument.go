@@ -2,10 +2,13 @@ package route
 
 import (
 	"errors"
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
+	"unicode"
 )
 
 // Argument represents an argument in a command
@@ -117,6 +120,7 @@ func (integerType) Help(_ string) string { return "A integer, for example `123`"
 // URL will parse a single URL
 var URL = urlType{}
 var urlRegex = regexp.MustCompile(`^((http[s]?|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)?(.*)?(#[\w\-]+)?$`)
+
 type urlType struct{}
 
 func (urlType) Parse(content *string) (interface{}, error) {
@@ -137,3 +141,65 @@ func (urlType) Parse(content *string) (interface{}, error) {
 func (urlType) Name() string         { return "url" }
 func (urlType) Help(_ string) string { return "A URL, for example `https://www.example.com`" }
 
+// Duration will parse a single duration in the form 1d2h3m4s
+var Duration = durationType{}
+
+type durationType struct{}
+
+func (durationType) Parse(content *string) (interface{}, error) {
+
+	a, b := takeFirstPart(*content)
+
+	// remove all whitespace and make lowercase
+	a = strings.ReplaceAll(a, " ", "")
+	a = strings.ToLower(a)
+
+	// the string has to start with a digit
+	if !unicode.IsDigit(rune(a[0])) {
+		return 0, errors.New("ParseDuration: duration string must start with a digit")
+	}
+
+	var dur time.Duration
+	var currentDigitBuffer string
+
+	for _, char := range a {
+
+		if unicode.IsDigit(char) {
+			currentDigitBuffer += string(char)
+		} else {
+
+			numI, err := strconv.Atoi(currentDigitBuffer)
+			currentDigitBuffer = ""
+			if err != nil {
+				return 0, err
+			}
+
+			num := time.Duration(numI)
+
+			switch char {
+			case 'd':
+				dur += num * time.Hour * 24
+			case 'h':
+				dur += num * time.Hour
+			case 'm':
+				dur += num * time.Minute
+			case 's':
+				dur += num * time.Second
+			default:
+				return 0, fmt.Errorf("ParseDuration: unknown unit suffix \"%s\"", string(char))
+			}
+		}
+	}
+
+	if currentDigitBuffer != "" {
+		return 0, fmt.Errorf("ParseDuration: value %s without suffix not allowed", currentDigitBuffer)
+	}
+
+	*content = b
+	return dur, nil
+
+}
+func (durationType) Name() string { return "duration" }
+func (durationType) Help(_ string) string {
+	return "A duration, for example `7d1h2m3s`. Valid time units are \"s\", \"m\", \"h\" and \"d\"."
+}
