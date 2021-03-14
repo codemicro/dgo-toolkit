@@ -20,9 +20,9 @@ type Kit struct {
 	DefaultAllowedMentions discordgo.MessageAllowedMentions
 	AllowDirectMessages    bool
 
-	commandSet  []*Command
-	reactionSet []*Reaction
-	tempReactionSet map[int]*Reaction
+	commandSet       []*Command
+	reactionSet      []*Reaction
+	tempReactionSet  map[int]*Reaction
 	tempReactionsMux *sync.RWMutex
 }
 

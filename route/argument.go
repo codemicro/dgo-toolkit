@@ -168,8 +168,6 @@ func (durationType) Parse(content *string) (interface{}, error) {
 			currentDigitBuffer += string(char)
 		} else {
 
-
-
 			var mod time.Duration
 
 			switch char {

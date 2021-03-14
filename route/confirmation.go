@@ -19,8 +19,8 @@ func (b *Kit) NewConfirmation(channelId string, userId string, embed *discordgo.
 
 	handlerId := -1
 	handlerId = b.AddTemporaryReaction(&Reaction{
-		Name:  "Temporary reaction in " + channelId,
-		Run:   func(ctx *ReactionContext) error {
+		Name: "Temporary reaction in " + channelId,
+		Run: func(ctx *ReactionContext) error {
 			if ctx.Reaction.MessageID != msg.ID {
 				return nil
 			}

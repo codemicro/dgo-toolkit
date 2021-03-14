@@ -25,9 +25,8 @@ func (m *CommonContext) SendMessageString(channelId string, content string) (*di
 func (m *CommonContext) SendMessageEmbed(channelId string, embed *discordgo.MessageEmbed) (*discordgo.Message, error) {
 
 	return m.Session.ChannelMessageSendComplex(channelId, &discordgo.MessageSend{
-		Embed: embed,
+		Embed:           embed,
 		AllowedMentions: m.DefaultAllowedMentions(),
 	})
 
 }
-
