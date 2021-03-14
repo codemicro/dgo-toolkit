@@ -61,11 +61,24 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 		return
 	}
 
-	// iterate registered commands
+	// find commands that match the trimmed command string
+	var possibleCommands []*Command
 	for _, cmd := range b.commandSet {
 		if cmd.detectRegexp.MatchString(trimmedContent) {
+			possibleCommands = append(possibleCommands, cmd)
+		}
+	}
 
-			// check if all restrictions pass
+	// if there are no matching commands, return
+	if len(possibleCommands) == 0 {
+		return
+	}
+
+	// remove commands that don't match their restrictions
+	{
+		var badCommands []int
+
+		for i, cmd := range possibleCommands {
 			ok := true
 			if cmd.Restrictions != nil {
 				for _, rf := range cmd.Restrictions {
@@ -78,81 +91,112 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 				}
 			}
 
-			if !ok { // if the restrictions have not been met
-				err := session.MessageReactionAdd(message.ChannelID, message.ID, "⚠")
-				if err != nil {
-					b.handleError(err)
-				}
-				break
+			if !ok {
+				badCommands = append(badCommands, i)
 			}
+		}
 
-			// remove command text
-			{
-				tcx := cmd.detectRegexp.Split(trimmedContent, -1)
-				trimmedContent = strings.TrimSpace(tcx[1])
+		// actually remove from slice
+		for i := len(badCommands) - 1; i >= 0; i -= 1 {
+
+			n := badCommands[i]
+
+			if n < len(possibleCommands)-1 {
+				copy(possibleCommands[n:], possibleCommands[n+1:])
 			}
+			possibleCommands[len(possibleCommands)-1] = nil
+			possibleCommands = possibleCommands[:len(possibleCommands)-1]
+		}
 
-			// parse arguments
-			argumentMap := make(map[string]interface{})
-			if cmd.Arguments != nil {
-				for _, arg := range cmd.Arguments {
+	}
 
-					var val interface{}
-					var failMessage string
+	// if no commands match restrictions
+	if len(possibleCommands) == 0 {
+		err := session.MessageReactionAdd(message.ChannelID, message.ID, "⚠")
+		if err != nil {
+			b.handleError(err)
+		}
+		return
+	}
 
-					if len(trimmedContent) == 0 { // if there's nothing left to parse
-						if arg.Default != nil { // if there's a default available
+	// parse arguments for those commands
+	var parseFailures []string
+	var runCommand *Command
+	var runArguments map[string]interface{}
+	for _, cmd := range possibleCommands {
+		// remove command text
+		tcx := cmd.detectRegexp.Split(trimmedContent, -1)
+		cmdTrimmedContent := strings.TrimSpace(tcx[1])
 
-							dv, err := arg.Default(session, message)
-							if err != nil {
-								b.handleError(err)
-								return
-							}
-							val = dv
+		// parse arguments
+		var failMessage string
+		argumentMap := make(map[string]interface{})
+		if cmd.Arguments != nil {
 
-						} else {
-							failMessage = "argument missing"
-						}
+			for _, arg := range cmd.Arguments {
 
-					} else { // otherwise parse from the available text
-						var err error
-						val, err = arg.Type.Parse(&trimmedContent)
-						if err != nil {
-							failMessage = err.Error()
-						}
-					}
+				var val interface{}
 
-					if failMessage != "" {
-						cont := fmt.Sprintf("❌ `%s`: %s", arg.Name, failMessage)
-						_, err := session.ChannelMessageSend(message.ChannelID, cont)
+				if len(cmdTrimmedContent) == 0 { // if there's nothing left to parse
+					if arg.Default != nil { // if there's a default available
+
+						dv, err := arg.Default(session, message)
 						if err != nil {
 							b.handleError(err)
+							return
 						}
-						return
+						val = dv
+
+					} else {
+						failMessage = "argument missing"
 					}
 
-					argumentMap[arg.Name] = val
-
+				} else { // otherwise parse from the available text
+					var err error
+					val, err = arg.Type.Parse(&cmdTrimmedContent)
+					if err != nil {
+						failMessage = err.Error()
+					}
 				}
+
+				if failMessage != "" {
+					parseFailures = append(parseFailures, fmt.Sprintf("❌ %s `%s`: %s", cmd.Name, arg.Name,
+						failMessage))
+					break // move onto the next command
+				}
+
+				argumentMap[arg.Name] = val
 			}
-
-			ctx := &MessageContext{
-				CommonContext: &CommonContext{
-					Session: session,
-					Kit:     b,
-				},
-				Message:   message,
-				Arguments: argumentMap,
-			}
-
-			err := cmd.Run(ctx)
-			if err != nil {
-				b.handleError(err, cmd.Name)
-			}
-
-			return // no more commands
-
 		}
+
+		if failMessage == "" {
+			runCommand = cmd
+			runArguments = argumentMap
+			break // let's run a command!
+		}
+	}
+
+	// if there was no command that parsed correctly
+	if runCommand == nil {
+		_, err := session.ChannelMessageSend(message.ChannelID, strings.Join(parseFailures, " or;\n"))
+		if err != nil {
+			b.handleError(err)
+		}
+		return
+	}
+
+	ctx := &MessageContext{
+		CommonContext: &CommonContext{
+			Session: session,
+			Kit:     b,
+		},
+		Message:   message,
+		Arguments: runArguments,
+	}
+
+	err := runCommand.Run(ctx)
+	if err != nil {
+		b.handleError(err, runCommand.Name)
 	}
 
 }
