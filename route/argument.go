@@ -206,3 +206,22 @@ func (durationType) Name() string { return "duration" }
 func (durationType) Help(_ string) string {
 	return "A duration, for example `7d1h2m3s`. Valid time units are `s`, `m`, `h` and `d`."
 }
+
+// DiscordSnowflakeType will validate a Discord snowflake and return a string value
+var DiscordSnowflakeType = discordSnowflakeType{}
+
+type discordSnowflakeType struct{}
+
+func (discordSnowflakeType) Parse(content *string) (interface{}, error) {
+
+	a, b := takeFirstPart(*content)
+
+	if _, err := strconv.ParseInt(a,10,64); err == nil {
+		*content = b
+		return a, nil
+	} else {
+		return nil, err
+	}
+}
+func (discordSnowflakeType) Name() string         { return "discordSnowflake" }
+func (discordSnowflakeType) Help(_ string) string { return "A Discord snowflake-style ID, for example `820763823325446165`" }
