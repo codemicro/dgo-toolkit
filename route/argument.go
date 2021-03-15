@@ -3,6 +3,7 @@ package route
 import (
 	"errors"
 	"fmt"
+	"github.com/asaskevich/govalidator"
 	"github.com/bwmarrin/discordgo"
 	"regexp"
 	"strconv"
@@ -119,7 +120,6 @@ func (integerType) Help(_ string) string { return "A integer, for example `123`"
 
 // URL will parse a single URL
 var URL = urlType{}
-var urlRegex = regexp.MustCompile(`^((http[s]?|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)?(.*)?(#[\w\-]+)?$`)
 
 type urlType struct{}
 
@@ -127,15 +127,11 @@ func (urlType) Parse(content *string) (interface{}, error) {
 
 	a, b := takeFirstPart(*content)
 
-	if !strings.HasSuffix(a, "/") {
-		a += "/" // the regex only matches URLs with a trailing /
-	}
-
-	if urlRegex.MatchString(a) {
+	if govalidator.IsURL(a) {
 		*content = b
 		return a, nil
 	}
-	return nil, errors.New("invalid URL")
+	return nil, errors.New("invalid URL format")
 
 }
 func (urlType) Name() string         { return "url" }
