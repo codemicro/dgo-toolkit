@@ -160,8 +160,10 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 				}
 
 				if failMessage != "" {
-					parseFailures = append(parseFailures, fmt.Sprintf("❌ %s `%s`: %s", cmd.Name, arg.Name,
-						failMessage))
+					x := fmt.Sprintf(" • If you were trying to run the **%s** command, what you entered into " +
+						"`%s` was incorrect. The following error message was provided: **%s**",
+						strings.ToLower(cmd.Name), arg.Name, failMessage)
+					parseFailures = append(parseFailures, x)
 					break // move onto the next command
 				}
 
@@ -178,7 +180,13 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 	// if there was no command that parsed correctly
 	if runCommand == nil {
-		_, err := session.ChannelMessageSend(message.ChannelID, strings.Join(parseFailures, " or;\n"))
+		var extraText string
+		if len(parseFailures) > 1 {
+			extraText = " - the problem with it depends on what command you were trying to run."
+		}
+		errText := fmt.Sprintf("❌ **An error was encountered when running your command**%s\n\n", extraText) +
+			strings.Join(parseFailures, "\n") + fmt.Sprintf("\n\nFor more information, run `%shelp`", b.Prefixes[0])
+		_, err := session.ChannelMessageSend(message.ChannelID, errText)
 		if err != nil {
 			b.handleError(err)
 		}

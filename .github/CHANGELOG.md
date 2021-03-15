@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Added
 * `DiscordSnowflakeType` argument type
+### Changed
+* Improve command parsing error messages 
 
 ## [0.3.0] - 2021-03-14
 ### Added
