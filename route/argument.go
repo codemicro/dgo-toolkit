@@ -203,8 +203,8 @@ func (durationType) Help(_ string) string {
 	return "A duration, for example `7d1h2m3s`. Valid time units are `s`, `m`, `h` and `d`."
 }
 
-// DiscordSnowflakeType will validate a Discord snowflake and return a string value
-var DiscordSnowflakeType = discordSnowflakeType{}
+// DiscordSnowflake will validate a Discord snowflake and return a string value
+var DiscordSnowflake = discordSnowflakeType{}
 
 type discordSnowflakeType struct{}
 
@@ -221,3 +221,24 @@ func (discordSnowflakeType) Parse(content *string) (interface{}, error) {
 }
 func (discordSnowflakeType) Name() string         { return "discordSnowflake" }
 func (discordSnowflakeType) Help(_ string) string { return "A Discord snowflake-style ID, for example `820763823325446165`" }
+
+// ChannelMention will validate a Discord channel mention and return the channel ID from that
+var ChannelMention = channelMentionType{}
+
+type channelMentionType struct{}
+var channelMentionRegex = regexp.MustCompile(`<#(\d+)>`)
+
+func (channelMentionType) Parse(content *string) (interface{}, error) {
+
+	a, b := takeFirstPart(*content)
+
+	if channelMentionRegex.MatchString(a) {
+		matches := channelMentionRegex.FindStringSubmatch(a)
+		*content = b
+		return matches[1], nil
+	} else {
+		return nil, errors.New("not a valid channel mention")
+	}
+}
+func (channelMentionType) Name() string { return "channelMention" }
+func (channelMentionType) Help(_ string) string { return "A channel mention, for example `#general` (it must turn blue and you must be able to click on it)" }
