@@ -13,6 +13,7 @@ type MessageContext struct {
 	*CommonContext
 	Message   *discordgo.MessageCreate
 	Arguments map[string]interface{}
+	Raw       string
 }
 
 type ReactionContext struct {
@@ -53,6 +54,7 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 		// slightly modified version of strings.HasPrefix
 		if b.hasPrefix(message.Content, prefix) {
 			trimmedContent = b.trimPrefix(message.Content, prefix)
+			break
 		}
 	}
 
@@ -160,7 +162,7 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 				}
 
 				if failMessage != "" {
-					x := fmt.Sprintf(" • If you were trying to run the **%s** command, what you entered into " +
+					x := fmt.Sprintf(" • If you were trying to run the **%s** command, what you entered into "+
 						"`%s` was incorrect. The following error message was provided: **%s**",
 						strings.ToLower(cmd.Name), arg.Name, failMessage)
 					parseFailures = append(parseFailures, x)
@@ -199,6 +201,7 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 			Kit:     b,
 		},
 		Message:   message,
+		Raw:       trimmedContent,
 		Arguments: runArguments,
 	}
 
