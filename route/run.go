@@ -212,6 +212,7 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 	err := runCommand.Run(ctx)
 	if err != nil {
 		b.handleError(err, runCommand.Name)
+		_ = b.Session.MessageReactionAdd(message.ChannelID, message.ID, "🚨")
 	}
 
 }
