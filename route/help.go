@@ -4,10 +4,11 @@ import "strings"
 
 // CommandInfo contains textual information about a command
 type CommandInfo struct {
-	Name        string
-	Description string
-	CommandText string
-	Arguments   []*ArgumentInfo
+	Name            string
+	Description     string
+	CommandText     string
+	HasRestrictions bool
+	Arguments       []*ArgumentInfo
 }
 
 // ArgumentInfo contains textual information about a command argument
@@ -42,6 +43,7 @@ func (b *Kit) GetCommandInfo() []*CommandInfo {
 			Description: cmd.Help,
 			CommandText: strings.Join(cmd.CommandText, " "),
 			Arguments:   args,
+			HasRestrictions: len(cmd.Restrictions) != 0,
 		})
 	}
 
