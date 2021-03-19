@@ -50,9 +50,9 @@ func (b *Kit) NewPaginate(channelId string, userId string, embeds []*discordgo.M
 				current += delta
 
 				if le := len(embeds); current >= le {
-					current = le - 1
+					current -= le
 				} else if current < 0 {
-					current = 0
+					current += le
 				}
 
 				_, err = ctx.Session.ChannelMessageEditEmbed(msg.ChannelID, msg.ID, embeds[current])
