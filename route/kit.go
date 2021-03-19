@@ -119,3 +119,7 @@ func (b *Kit) trimPrefix(s, prefix string) string {
 	return s
 
 }
+
+func (b *Kit) GetNums() (int, int) {
+	return len(b.commandSet), len(b.reactionSet) + len(b.tempReactionSet)
+}
