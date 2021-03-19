@@ -12,6 +12,7 @@ type Command struct {
 	Run              MessageRunFunc
 	Invisible        bool // prevent command from being shown in *kit.GetCommandInfo
 	AllowOverloading bool
+	Category         uint
 
 	detectRegexp *regexp.Regexp
 }

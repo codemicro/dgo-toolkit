@@ -8,6 +8,7 @@ type CommandInfo struct {
 	Description     string
 	CommandText     string
 	HasRestrictions bool
+	Category        uint
 	Arguments       []*ArgumentInfo
 }
 
@@ -39,11 +40,12 @@ func (b *Kit) GetCommandInfo() []*CommandInfo {
 		}
 
 		n = append(n, &CommandInfo{
-			Name:        cmd.Name,
-			Description: cmd.Help,
-			CommandText: strings.Join(cmd.CommandText, " "),
-			Arguments:   args,
+			Name:            cmd.Name,
+			Description:     cmd.Help,
+			CommandText:     strings.Join(cmd.CommandText, " "),
+			Arguments:       args,
 			HasRestrictions: len(cmd.Restrictions) != 0,
+			Category:        cmd.Category,
 		})
 	}
 
