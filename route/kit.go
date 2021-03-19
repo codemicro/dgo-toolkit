@@ -43,8 +43,9 @@ func (b *Kit) handleError(e error, i ...string) {
 	}
 }
 
-// AddCommand adds commands to the command set for this instance of Kit. Command overloading is supported. If more than
-// one command is matched by an incoming message, the command that was added to the Kit first is run.
+// AddCommand adds commands to the command set for this instance of Kit. Command overloading is supported for commands
+// that have AllowOverloading set true. If more than one command is matched by an incoming message, the command that was
+// added to the Kit first is run.
 func (b *Kit) AddCommand(commands ...*Command) {
 
 	for _, c := range commands {

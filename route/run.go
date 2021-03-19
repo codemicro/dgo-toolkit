@@ -67,7 +67,11 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 	var possibleCommands []*Command
 	for _, cmd := range b.commandSet {
 		if cmd.detectRegexp.MatchString(trimmedContent) {
-			possibleCommands = append(possibleCommands, cmd)
+
+			if len(possibleCommands) == 0 || cmd.AllowOverloading {
+				possibleCommands = append(possibleCommands, cmd)
+			}
+
 		}
 	}
 
