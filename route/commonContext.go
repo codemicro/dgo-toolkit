@@ -4,12 +4,12 @@ import "github.com/bwmarrin/discordgo"
 
 type CommonContext struct {
 	Session *discordgo.Session
-	Kit     *Kit
+	kit     *Kit
 }
 
 func (m *CommonContext) DefaultAllowedMentions() *discordgo.MessageAllowedMentions {
 	// This copy is intentional
-	n := m.Kit.DefaultAllowedMentions
+	n := m.kit.DefaultAllowedMentions
 	return &n
 }
 

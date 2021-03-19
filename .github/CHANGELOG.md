@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Added
 * `HasRestrictions` to `CommandInfo`
+### Changed
+* Unexport `kit` in `CommonContext`
 
 ## [0.4.0] - 2021-03-19
 ### Changed
