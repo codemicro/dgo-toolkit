@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 * `HasRestrictions` to `CommandInfo`
 * `Category` to `Command` and `CommandInfo`
+* `kit.NewPagination`
 
 ## [0.4.0] - 2021-03-19
 ### Changed
