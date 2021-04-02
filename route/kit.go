@@ -19,6 +19,7 @@ type Kit struct {
 	AllowBots              bool
 	DefaultAllowedMentions discordgo.MessageAllowedMentions
 	AllowDirectMessages    bool
+	UserErrorFunc          func(string) string
 
 	commandSet       []*Command
 	reactionSet      []*Reaction
@@ -28,7 +29,15 @@ type Kit struct {
 
 // NewKit creates a new Kit instance
 func NewKit(session *discordgo.Session, prefixes []string) *Kit {
-	return &Kit{Session: session, Prefixes: prefixes, tempReactionSet: make(map[int]*Reaction), tempReactionsMux: new(sync.RWMutex)}
+	return &Kit{
+		Session:  session,
+		Prefixes: prefixes,
+		UserErrorFunc: func(s string) string {
+			return "❌ **Error**: " + s
+		},
+		tempReactionSet: make(map[int]*Reaction),
+		tempReactionsMux: new(sync.RWMutex),
+	}
 }
 
 // HandleError is the internal function used to handle an error that accounts for *kit.ErrorHandler being nil

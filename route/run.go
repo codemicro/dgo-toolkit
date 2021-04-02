@@ -9,13 +9,6 @@ import (
 type MessageRunFunc func(ctx *MessageContext) error
 type ReactionRunFunc func(ctx *ReactionContext) error
 
-type MessageContext struct {
-	*CommonContext
-	Message   *discordgo.MessageCreate
-	Arguments map[string]interface{}
-	Raw       string
-}
-
 type ReactionContext struct {
 	*CommonContext
 	Reaction *discordgo.MessageReaction
