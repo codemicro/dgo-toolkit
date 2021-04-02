@@ -34,7 +34,7 @@ func NewKit(session *discordgo.Session, prefixes []string) *Kit {
 		Session:  session,
 		Prefixes: prefixes,
 		UserErrorFunc: func(s string) string {
-			return "❌ **Error**: " + s
+			return "❌ **Error:** " + s
 		},
 		tempReactionSet: make(map[int]*Reaction),
 		tempReactionsMux: new(sync.RWMutex),
