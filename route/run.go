@@ -51,8 +51,19 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 		}
 	}
 
+	ctx := &MessageContext{
+		CommonContext: &CommonContext{
+			Session: session,
+			Kit:     b,
+		},
+		Message:   message,
+	}
+
 	if trimmedContent == "" {
 		// no command? nothing for us to do
+		if err := b.runMiddlewares(MiddlewareTriggerInvalid, ctx); err != nil {
+			b.handleError(err, "error running middleware")
+		}
 		return
 	}
 
@@ -70,6 +81,9 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 	// if there are no matching commands, return
 	if len(possibleCommands) == 0 {
+		if err := b.runMiddlewares(MiddlewareTriggerInvalid, ctx); err != nil {
+			b.handleError(err, "error running middleware")
+		}
 		return
 	}
 
@@ -111,9 +125,12 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 	// if no commands match restrictions
 	if len(possibleCommands) == 0 {
-		err := session.MessageReactionAdd(message.ChannelID, message.ID, "⚠")
-		if err != nil {
+		if err := session.MessageReactionAdd(message.ChannelID, message.ID, "⚠"); err != nil {
 			b.handleError(err)
+		}
+
+		if err := b.runMiddlewares(MiddlewareTriggerInvalid, ctx); err != nil {
+			b.handleError(err, "error running middleware")
 		}
 		return
 	}
@@ -189,17 +206,17 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 		if err != nil {
 			b.handleError(err)
 		}
+		if err := b.runMiddlewares(MiddlewareTriggerInvalid, ctx); err != nil {
+			b.handleError(err, "error running middleware")
+		}
 		return
 	}
 
-	ctx := &MessageContext{
-		CommonContext: &CommonContext{
-			Session: session,
-			Kit:     b,
-		},
-		Message:   message,
-		Raw:       trimmedContent,
-		Arguments: runArguments,
+	ctx.Raw = trimmedContent
+	ctx.Arguments = runArguments
+
+	if err := b.runMiddlewares(MiddlewareTriggerValid, ctx); err != nil {
+		b.handleError(err, "error running middleware")
 	}
 
 	err := runCommand.Run(ctx)
@@ -227,6 +244,10 @@ func (b *Kit) onReactionAdd(session *discordgo.Session, reaction *discordgo.Mess
 		},
 		Reaction: reaction.MessageReaction,
 		Event:    ReactionAdd,
+	}
+
+	if err := b.runMiddlewares(MiddlewareTriggerReactionAdd, &mCtx); err != nil {
+		b.handleError(err, "error running middleware")
 	}
 
 	f := func(r *Reaction) {
@@ -271,6 +292,10 @@ func (b *Kit) onReactionRemove(session *discordgo.Session, reaction *discordgo.M
 		},
 		Reaction: reaction.MessageReaction,
 		Event:    ReactionRemove,
+	}
+
+	if err := b.runMiddlewares(MiddlewareTriggerReactionRemove, &mCtx); err != nil {
+		b.handleError(err, "error running middleware")
 	}
 
 	f := func(r *Reaction) {

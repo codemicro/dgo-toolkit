@@ -23,6 +23,7 @@ type Kit struct {
 
 	commandSet       []*Command
 	reactionSet      []*Reaction
+	middlewareSet    []*Middleware
 	tempReactionSet  map[int]*Reaction
 	tempReactionsMux *sync.RWMutex
 }
@@ -95,6 +96,11 @@ func (b *Kit) RemoveTemporaryReaction(id int) {
 	b.tempReactionsMux.Lock()
 	delete(b.tempReactionSet, id)
 	b.tempReactionsMux.Unlock()
+}
+
+// AddReaction adds a middleware to the middleware set for this instance of Kit
+func (b *Kit) AddMiddleware(middlewares ...*Middleware) {
+	b.middlewareSet = append(b.middlewareSet, middlewares...)
 }
 
 func (b *Kit) CreateHandlers() {

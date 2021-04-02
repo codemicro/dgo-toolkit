@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 ### Added
+* Middleware
 * `route.(*MessageContext).SendErrorMessage` and `route.Kit.UserErrorFunc` 
 
 ## [0.5.1] - 2021-03-19
