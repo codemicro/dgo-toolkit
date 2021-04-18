@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.7.0]
+### Added
+* Temporary message handlers
+
 ## [0.6.0] - 2021-04-02
 ### Added
 * Middleware

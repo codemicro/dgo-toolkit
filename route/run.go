@@ -3,6 +3,7 @@ package route
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"strconv"
 	"strings"
 )
 
@@ -58,6 +59,20 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 		},
 		Message:   message,
 	}
+
+	ctx.Raw = message.Content
+	b.tempMessageHandlerMux.RLock()
+	for n, r := range b.tempMessageHandlerSet {
+		r := r // this is a loop var and can change before the function is actually executed in the goroutine, which
+		// would be bad
+		go func() {
+			err := r(&(*ctx)) // that horrendous thing clones ctx
+			if err != nil {
+				b.handleError(err, "error running temporary message handler", strconv.Itoa(n))
+			}
+		}()
+	}
+	b.tempMessageHandlerMux.RUnlock()
 
 	if trimmedContent == "" {
 		// no command? nothing for us to do
