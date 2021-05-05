@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+##[0.7.1] - 2021-05-05
+### Fixed
+* Case (in)sensitive modes are now correctly applied when parsing commands
+
 ## [0.7.0] - 2021-04-20
 ### Added
 * Temporary message handlers 
@@ -91,7 +95,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 * Everything (initial release)
 
-[Unreleased]: https://github.com/codemicro/dgo-toolkit/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/codemicro/dgo-toolkit/compare/v0.7.1...HEAD
+[0.7.1]: https://github.com/codemicro/dgo-toolkit/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/codemicro/dgo-toolkit/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/codemicro/dgo-toolkit/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/codemicro/dgo-toolkit/compare/v0.5.0...v0.5.1

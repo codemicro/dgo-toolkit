@@ -71,7 +71,7 @@ func (b *Kit) AddCommand(commands ...*Command) {
 		}
 
 		var isc string
-		if b.IsCaseSensitive {
+		if !b.IsCaseSensitive {
 			isc = `(?i)`
 		}
 
