@@ -230,6 +230,8 @@ func (b *Kit) onMessageCreate(session *discordgo.Session, message *discordgo.Mes
 
 	ctx.Raw = trimmedContent
 	ctx.Arguments = runArguments
+	y := *runCommand
+	ctx.Command = &y
 
 	if err := b.runMiddlewares(MiddlewareTriggerValid, ctx); err != nil {
 		b.handleError(err, "error running middleware")
