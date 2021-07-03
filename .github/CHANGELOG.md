@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 ### Fixed
 * Ensure temporary reaction and message handlers have unique IDs
+* Loop variable `n` no longer captured by the goroutine used when running temporary message handlers
 
 ## [0.8.0] - 2021-05-16
 ### Added
