@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.8.1] - 2021-07-03
 ### Fixed
 * Ensure temporary reaction and message handlers have unique IDs
 * Loop variable `n` no longer captured by the goroutine used when running temporary message handlers
@@ -104,8 +106,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 * Everything (initial release)
 
-[Unreleased]: https://github.com/codemicro/dgo-toolkit/compare/v0.8.0...HEAD
-[0.7.1]: https://github.com/codemicro/dgo-toolkit/compare/v0.7.1...v0.8.0
+[Unreleased]: https://github.com/codemicro/dgo-toolkit/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/codemicro/dgo-toolkit/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/codemicro/dgo-toolkit/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/codemicro/dgo-toolkit/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/codemicro/dgo-toolkit/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/codemicro/dgo-toolkit/compare/v0.5.1...v0.6.0
