@@ -61,7 +61,4 @@ _ = session.Open()
 
 ## TODO
 
-* Confirmation popups
-* Pagination helper
-* Middleware interface
 * Unified response type that can be returned from a function (or maybe is included as a pointer in Ctx?)
