@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.8.3] - 2021-08-23
+### Fixed
+* Fixed `RestrictionByRole` (was producing inverted output, sort of?)
+
 ## [0.8.2] - 2021-08-23
 ### Changed
 * `func RestrictionByRole(roleId string) CommandRestriction` changed to `func RestrictionByRole(roleIds ...string) CommandRestriction`
