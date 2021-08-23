@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.8.2] - 2021-08-23
+### Changed
+* `func RestrictionByRole(roleId string) CommandRestriction` changed to `func RestrictionByRole(roleIds ...string) CommandRestriction`
+
 ## [0.8.1] - 2021-07-03
 ### Fixed
 * Ensure temporary reaction and message handlers have unique IDs
@@ -106,7 +110,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 * Everything (initial release)
 
-[Unreleased]: https://github.com/codemicro/dgo-toolkit/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/codemicro/dgo-toolkit/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/codemicro/dgo-toolkit/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/codemicro/dgo-toolkit/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/codemicro/dgo-toolkit/compare/v0.7.1...v0.8.0
 [0.7.1]: https://github.com/codemicro/dgo-toolkit/compare/v0.7.0...v0.7.1
